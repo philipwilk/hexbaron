@@ -841,18 +841,20 @@ namespace HexBaronCS
         public string GetGridAsString(bool p1Turn)
         {
             int listPositionOfTile = 0;
+            int actualTile = 0;
+            int nonNull = -1;
             player1Turn = p1Turn;
-            string gridAsString = CreateTopLine() + CreateEvenLine(true, ref listPositionOfTile);
+            string gridAsString = CreateTopLine() + CreateEvenLine(true, ref listPositionOfTile, ref nonNull);
             listPositionOfTile += 1;
-            gridAsString += CreateOddLine(ref listPositionOfTile);
+            gridAsString += CreateOddLine(ref listPositionOfTile, ref actualTile);
             for (var count = 1; count <= size - 2; count += 2)
             {
                 listPositionOfTile += 1;
-                gridAsString += CreateEvenLine(false, ref listPositionOfTile);
+                gridAsString += CreateEvenLine(false, ref listPositionOfTile, ref actualTile);
                 listPositionOfTile += 1;
-                gridAsString += CreateOddLine(ref listPositionOfTile);
+                gridAsString += CreateOddLine(ref listPositionOfTile, ref actualTile);
             }
-            return gridAsString + CreateBottomLine();
+            return gridAsString + CreateBottomLine(ref actualTile);
         }
 
         private void MovePiece(int newIndex, int oldIndex)
@@ -874,12 +876,18 @@ namespace HexBaronCS
             }
         }
 
-        private string CreateBottomLine()
+        private string CreateBottomLine(ref int actualTile)
         {
             string line = "   ";
             for (var count = 1; count <= size / 2; count++)
             {
-                line += @" \__/ ";
+                if (actualTile > 9) {
+                    line += @" \"+actualTile+"/ ";
+                }
+                else {
+                    line += @" \"+actualTile+"_/ ";
+                }
+                actualTile++;
             }
             return line + Environment.NewLine;
         }
@@ -894,23 +902,44 @@ namespace HexBaronCS
             return line + Environment.NewLine;
         }
 
-        private string CreateOddLine(ref int listPositionOfTile)
+        private string CreateOddLine(ref int listPositionOfTile, ref int actualTile)
         {
             string line = "";
             for (var count = 1; count <= size / 2; count++)
             {
                 if (count > 1 & count < size / 2)
                 {
-                    line += GetPieceTypeInTile(listPositionOfTile) + @"\__/";
+                    if (actualTile > 9) {
+                        line += GetPieceTypeInTile(listPositionOfTile) + @"\"+actualTile+"/";
+                    }
+                    else {
+                        line += GetPieceTypeInTile(listPositionOfTile) + @"\"+actualTile+"_/";
+                    }
+                    actualTile++;
+                    
                     listPositionOfTile += 1;
                     line += tiles[listPositionOfTile].GetTerrain();
                 }
                 else if (count == 1)
                 {
-                    line += @" \__/" + tiles[listPositionOfTile].GetTerrain();
+                    if (actualTile > 9) {
+                        line += @" \"+actualTile+"/" + tiles[listPositionOfTile].GetTerrain();
+                    }
+                    else {
+                        line += @" \"+actualTile+"_/" + tiles[listPositionOfTile].GetTerrain();
+                    }
+                    actualTile++;
+                    
                 }
             }
-            line += GetPieceTypeInTile(listPositionOfTile) + @"\__/";
+            if (actualTile > 9) {
+                line += GetPieceTypeInTile(listPositionOfTile) + @"\"+actualTile+"/";
+            }
+            else {
+                line += GetPieceTypeInTile(listPositionOfTile) + @"\"+actualTile+"_/";
+            }
+            actualTile++;
+            
             listPositionOfTile += 1;
             if (listPositionOfTile < tiles.Count())
             {
@@ -923,22 +952,53 @@ namespace HexBaronCS
             return line;
         }
 
-        private string CreateEvenLine(bool firstEvenLine, ref int listPositionOfTile)
+        private string CreateEvenLine(bool firstEvenLine, ref int listPositionOfTile, ref int actualTile)
         {
             string line = " /" + tiles[listPositionOfTile].GetTerrain();
             for (var count = 1; count <= size / 2 - 1; count++)
             {
                 line += GetPieceTypeInTile(listPositionOfTile);
                 listPositionOfTile += 1;
-                line += @"\__/" + tiles[listPositionOfTile].GetTerrain();
+                if (actualTile == -1) {
+                    line += @"\__/" + tiles[listPositionOfTile].GetTerrain();
+                    actualTile--;
+                } 
+                else if  (actualTile > 9) {
+                    line += @"\"+actualTile+"/" + tiles[listPositionOfTile].GetTerrain();
+                }
+                else {
+                    line += @"\"+actualTile+"_/" + tiles[listPositionOfTile].GetTerrain();
+
+                }
+                actualTile++;
             }
             if (firstEvenLine)
             {
-                line += GetPieceTypeInTile(listPositionOfTile) + @"\__" + Environment.NewLine;
+                if (actualTile == -1) {
+                    line += GetPieceTypeInTile(listPositionOfTile) + @"\__" + Environment.NewLine;
+                    actualTile--;
+                }
+                else if (actualTile > 9) {
+                    line += GetPieceTypeInTile(listPositionOfTile) + @"\"+actualTile + Environment.NewLine;
+                }
+                else {
+                    line += GetPieceTypeInTile(listPositionOfTile) + @"\"+actualTile+"_" + Environment.NewLine;
+                }
+                actualTile++;
             }
             else
             {
-                line += GetPieceTypeInTile(listPositionOfTile) + @"\__/" + Environment.NewLine;
+                if (actualTile == -1) {
+                    line += GetPieceTypeInTile(listPositionOfTile) + @"\__/" + Environment.NewLine;
+                    actualTile--;
+                }
+                else if (actualTile > 9) {
+                    line += GetPieceTypeInTile(listPositionOfTile) + @"\"+actualTile+"/" + Environment.NewLine;
+                }
+                else {
+                    line += GetPieceTypeInTile(listPositionOfTile) + @"\"+actualTile+"_/" + Environment.NewLine;
+                }
+                actualTile++;
             }
             return line;
         }
