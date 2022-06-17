@@ -84,8 +84,10 @@ namespace HexBaronCS
                                                  , " ", " ", "#", "#", "#", "#", "~", "~", "~", "~", "~", " ", "#", " ", "#", " "};
             int gridSize = 8;
             grid = new HexGrid(gridSize);
-            player1 = new Player("Player One", 0, 10, 10, 5);
-            player2 = new Player("Player Two", 1, 10, 10, 5);
+            Console.WriteLine("Enter player 1 name");
+            player1 = new Player(Console.ReadLine(), 0, 10, 10, 5);
+            Console.WriteLine("Enter player 2 name");
+            player2 = new Player(Console.ReadLine(), 1, 10, 10, 5);
             grid.SetUpGridTerrain(t);
             grid.AddPiece(true, "Baron", 0);
             grid.AddPiece(true, "Serf", 8);
