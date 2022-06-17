@@ -197,7 +197,7 @@ namespace HexBaronCS
                 for (int count = 1; count <= 3; count++)
                 {
                     Console.Write("Enter command: ");
-                    commands.Add(Console.ReadLine().ToLower());
+                    commands.Add(Console.ReadLine().ToLower().Trim());
                 }
                 foreach (var c in commands)
                 {
