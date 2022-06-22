@@ -197,8 +197,17 @@ namespace HexBaronCS
                 for (int count = 1; count <= 3; count++)
                 {
                     Console.Write("Enter command: ");
-                    commands.Add(Console.ReadLine().ToLower());
-                }
+                    string c = Console.ReadLine().ToLower();
+                    if (c == "hexes")
+                    {
+                        grid.GetGridAsIndices(player1Turn);
+                        
+                        count--;
+                    }
+                    else {
+                        commands.Add(c);
+                    }
+                };
                 foreach (var c in commands)
                 {
                     List<string> items = new List<string>(c.Split(' '));
@@ -855,6 +864,20 @@ namespace HexBaronCS
             return gridAsString + CreateBottomLine();
         }
 
+        public string GetGridAsIndices(bool p1Turn)
+        {
+            int tileNum = 0;
+            string gridAsString = CreateTopLine() + CreateEvenLine_Ind(true, ref tileNum);
+            gridAsString += CreateOddLine(ref tileNum);
+            for (var count = 1; count <= size - 2; count += 2)
+            {
+                gridAsString += CreateEvenLine_Ind(false, ref tileNum);
+                gridAsString += CreateOddLine(ref tileNum);
+            }
+            return gridAsString + CreateBottomLine();
+
+        }
+
         private void MovePiece(int newIndex, int oldIndex)
         {
             tiles[newIndex].SetPiece(tiles[oldIndex].GetPieceInTile());
@@ -939,6 +962,62 @@ namespace HexBaronCS
             else
             {
                 line += GetPieceTypeInTile(listPositionOfTile) + @"\__/" + Environment.NewLine;
+            }
+            return line;
+        }
+
+        private string SingleOrDouble_inc(ref int n)
+        {
+            int a = n;
+            n++;
+            if (a < 10)
+            {
+                return a+"_";
+            }
+            else return a.ToString();
+        }
+
+        private string CreateOddLine_Ind(ref int tileNum)
+        {
+            string line = "";
+            for (var count = 1; count <= size / 2; count++)
+            {
+                if (count > 1 & count < size / 2)
+                {
+                    line += " " + @"\__/";
+                    line += SingleOrDouble_inc(ref tileNum);
+                }
+                else if (count == 1)
+                {
+                    line += @" \__/" + SingleOrDouble_inc(ref tileNum);
+                }
+            }
+            line += SingleOrDouble_inc(ref tileNum) + @"\__/";
+            if (tileNum < tiles.Count())
+            {
+                line += SingleOrDouble_inc(ref tileNum) + @"\" + Environment.NewLine;
+            }
+            else
+            {
+                line += @"\" + Environment.NewLine;
+            }
+            return line;
+        }
+        private string CreateEvenLine_Ind(bool firstEvenLine, ref int tileNum)
+        {   
+            string line = " /" + SingleOrDouble_inc(ref tileNum);
+            for (var count = 1; count <= size / 2 - 1; count++)
+            {
+                line += " ";
+                line += @"\__/" + SingleOrDouble_inc(ref tileNum);
+            }
+            if (firstEvenLine)
+            {
+                line += SingleOrDouble_inc(ref tileNum) + @"\__" + Environment.NewLine;
+            }
+            else
+            {
+                line += SingleOrDouble_inc(ref tileNum) + @"\__/" + Environment.NewLine;
             }
             return line;
         }
