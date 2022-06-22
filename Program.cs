@@ -200,8 +200,7 @@ namespace HexBaronCS
                     string c = Console.ReadLine().ToLower();
                     if (c == "hexes")
                     {
-                        grid.GetGridAsIndices(player1Turn);
-                        
+                        grid.GetGridAsIndices(player1Turn); 
                         count--;
                     }
                     else {
@@ -875,7 +874,6 @@ namespace HexBaronCS
                 gridAsString += CreateOddLine(ref tileNum);
             }
             return gridAsString + CreateBottomLine();
-
         }
 
         private void MovePiece(int newIndex, int oldIndex)
@@ -968,13 +966,8 @@ namespace HexBaronCS
 
         private string SingleOrDouble_inc(ref int n)
         {
-            int a = n;
             n++;
-            if (a < 10)
-            {
-                return a+"_";
-            }
-            else return a.ToString();
+            return n--.ToString().PadLeft(2);
         }
 
         private string CreateOddLine_Ind(ref int tileNum)
