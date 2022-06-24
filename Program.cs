@@ -200,7 +200,7 @@ namespace HexBaronCS
                     string c = Console.ReadLine().ToLower();
                     if (c == "hexes")
                     {
-                        grid.GetGridAsIndices(player1Turn); 
+                        Console.WriteLine(grid.CheatIndices(player1Turn)); 
                         count--;
                     }
                     else {
@@ -867,7 +867,7 @@ namespace HexBaronCS
         {
             int tileNum = 0;
             string gridAsString = CreateTopLine() + CreateEvenLine_Ind(true, ref tileNum);
-            gridAsString += CreateOddLine(ref tileNum);
+            gridAsString += CreateOddLine_Ind(ref tileNum);
             for (var count = 1; count <= size - 2; count += 2)
             {
                 gridAsString += CreateEvenLine_Ind(false, ref tileNum);
